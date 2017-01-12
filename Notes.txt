@@ -1,0 +1,17 @@
+1)Shared Build of tensorflow
+-----------------------------------
+cd tensorflow
+# Build library
+bazel build -c opt //tensorflow:libtensorflow.so
+should produce the file in bazel-bin/tensorflow
+
+2) http://jackytung8085.blogspot.com/2016/06/loading-tensorflow-graph-with-c-api-by.html
+
+3) generate frozen graph
+--------------------------
+Tensorflow official guide says that:
+What this does is load the GraphDef, pull in the values for all the variables from the latest checkpoint file, and then replace each Variable op with a Const that has the numerical data for the weights stored in its attributes It then strips away all the extraneous nodes that aren't used for forward inference, and saves out the resulting GraphDef into an output file
+
+Hence, we do the following steps to generate frozen graph. From tensorflow root folder - 
+
+bazel build tensorflow/python/tools:freeze_graph && bazel-bin/tensorflow/python/tools/freeze_graph --input_graph=/home/ivusi7dl/Users/chandan/pycode/tf/cnn_pd/trainedmodel/graph.pb --input_checkpoint=/home/ivusi7dl/Users/chandan/pycode/tf/cnn_pd/trainedmodel/model.ckpt --output_graph=/home/ivusi7dl/Users/chandan/pycode/tf/cnn_pd/trainedmodel/frozen_graph.pb --output_node_names=softmax
